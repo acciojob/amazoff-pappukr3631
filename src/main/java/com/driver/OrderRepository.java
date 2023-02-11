@@ -48,17 +48,11 @@ public class OrderRepository {
     }
 
     public DeliveryPartner getPartnerById(String partnerId) {
-        if(deliveryPartnerHashMap.containsKey(partnerId))
-            return deliveryPartnerHashMap.get(partnerId);
-        return null;
+        return deliveryPartnerHashMap.get(partnerId);
     }
 
     public Integer getOrderCountByPartnerId(String partnerId) {
-        if(deliveryPartnerHashMap.containsKey(partnerId))
-        {
-            return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
-        }
-        return null;
+        return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
@@ -115,22 +109,24 @@ public class OrderRepository {
                 if(time > max)
                     max = time;
             }
-            String lastDeliveryTime = String.valueOf(max/60) + ":" + String.valueOf(max%60);
-            return lastDeliveryTime;
+            String hh = String.valueOf(max/60);
+            String mm = String.valueOf(max%60);
+            if(hh.length() == 1)
+                hh = "0" + hh;
+            if(mm.length() == 1)
+                mm = "0" + mm;
+            return hh + ":" + mm;
         }
         return "Partner Not Found";
     }
 
     public void deletePartnerById(String partnerId) {
-        if(deliveryPartnerHashMap.containsKey(partnerId))
-            deliveryPartnerHashMap.remove(partnerId);
-        if(partnerOrderPairHashMap.containsKey(partnerId))
-            partnerOrderPairHashMap.remove(partnerId);
+        deliveryPartnerHashMap.remove(partnerId);
+        partnerOrderPairHashMap.remove(partnerId);
     }
 
     public void deleteOrderById(String orderId) {
-        if(orderHashMap.containsKey(orderId))
-            orderHashMap.remove(orderId);
+        orderHashMap.remove(orderId);
         for(String partner : partnerOrderPairHashMap.keySet())
         {
             List<String> orders = partnerOrderPairHashMap.get(partner);

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     OrderService orderService = new OrderService();
 
+    public OrderController() {
+    }
 
     @PostMapping("/add-order")
     public ResponseEntity<String> addOrder(@RequestBody Order order){
@@ -62,9 +64,6 @@ public class OrderController {
 
         //deliveryPartner should contain the value given by partnerId
 
-        if(deliveryPartner == null)
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
         return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
     }
 
@@ -74,8 +73,6 @@ public class OrderController {
         Integer orderCount = orderService.getOrderCountByPartnerId(partnerId);
 
         //orderCount should denote the orders given by a partner-id
-        if(orderCount == null)
-            return new ResponseEntity<>(0,HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
     }
