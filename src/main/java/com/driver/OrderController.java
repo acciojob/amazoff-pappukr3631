@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("orders")
 public class OrderController {
+    OrderService orderService = new OrderService();
 
-    @Autowired
-    OrderService orderService;
 
     @PostMapping("/add-order")
     public ResponseEntity<String> addOrder(@RequestBody Order order){
@@ -52,8 +51,6 @@ public class OrderController {
 
         Order order= orderService.getOrderById(orderId);
         //order should be returned with an orderId.
-        if(order == null)
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }

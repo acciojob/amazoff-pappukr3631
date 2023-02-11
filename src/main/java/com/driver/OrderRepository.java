@@ -20,6 +20,7 @@ public class OrderRepository {
     }
 
     public void addOrder(Order order) {
+
         orderHashMap.put(order.getId(),order);
     }
 
@@ -68,9 +69,7 @@ public class OrderRepository {
     }
 
     public List<String> getAllOrders() {
-        List<String> orders = new ArrayList<>();
-        for(String order : orderHashMap.keySet())
-            orders.add(order);
+        ArrayList<String> orders = new ArrayList<>(orderHashMap.keySet());
         return orders;
     }
 
