@@ -12,6 +12,13 @@ public class OrderRepository {
     HashMap<String,Order> orderHashMap;
     HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
     HashMap<String, List<String>> partnerOrderPairHashMap;
+
+    public OrderRepository() {
+        orderHashMap = new HashMap<>();
+        deliveryPartnerHashMap = new HashMap<>();
+        partnerOrderPairHashMap = new HashMap<>();
+    }
+
     public void addOrder(Order order) {
         orderHashMap.put(order.getId(),order);
     }

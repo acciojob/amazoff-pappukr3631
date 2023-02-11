@@ -78,7 +78,7 @@ public class OrderController {
 
         //orderCount should denote the orders given by a partner-id
         if(orderCount == null)
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(0,HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
     }
