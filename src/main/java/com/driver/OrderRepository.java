@@ -12,11 +12,13 @@ public class OrderRepository {
     HashMap<String,Order> orderHashMap;
     HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
     HashMap<String, List<String>> partnerOrderPairHashMap;
+    int assignedOrderCount;
 
     public OrderRepository() {
         orderHashMap = new HashMap<>();
         deliveryPartnerHashMap = new HashMap<>();
         partnerOrderPairHashMap = new HashMap<>();
+        assignedOrderCount = 0;
     }
 
     public void addOrder(Order order) {
@@ -29,6 +31,7 @@ public class OrderRepository {
     }
 
     public void addOrderPartnerPair(String orderId, String partnerId) {
+        assignedOrderCount++;
         if(partnerOrderPairHashMap.containsKey(partnerId))
         {
             partnerOrderPairHashMap.get(partnerId).add(orderId);
@@ -69,12 +72,13 @@ public class OrderRepository {
 
     public Integer getCountOfUnassignedOrders() {
 
-        int pairedCount = 0;
-        for(String partner : partnerOrderPairHashMap.keySet())
-        {
-            pairedCount += partnerOrderPairHashMap.get(partner).size();
-        }
-        return orderHashMap.size() - pairedCount;
+//        int pairedCount = 0;
+//        for(String partner : partnerOrderPairHashMap.keySet())
+//        {
+//            pairedCount += partnerOrderPairHashMap.get(partner).size();
+//        }
+//        return orderHashMap.size() - pairedCount;
+        return orderHashMap.size() - assignedOrderCount;
     }
 
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
@@ -122,6 +126,7 @@ public class OrderRepository {
 
     public void deletePartnerById(String partnerId) {
         deliveryPartnerHashMap.remove(partnerId);
+        assignedOrderCount -= partnerOrderPairHashMap.get(partnerId).size();
         partnerOrderPairHashMap.remove(partnerId);
     }
 
@@ -133,6 +138,7 @@ public class OrderRepository {
             if(orders.contains(orderId))
             {
                 orders.remove(orderId);
+                assignedOrderCount--;
                 break;
             }
         }
