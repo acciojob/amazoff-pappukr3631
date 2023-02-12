@@ -31,17 +31,18 @@ public class OrderRepository {
     }
 
     public void addOrderPartnerPair(String orderId, String partnerId) {
-        assignedOrderCount++;
-        if(partnerOrderPairHashMap.containsKey(partnerId))
-        {
-            partnerOrderPairHashMap.get(partnerId).add(orderId);
-            deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(deliveryPartnerHashMap.get(partnerId).getNumberOfOrders()+1);
-            return;
+        if(orderHashMap.containsKey(orderId) && deliveryPartnerHashMap.containsKey(partnerId)) {
+            assignedOrderCount++;
+            if (partnerOrderPairHashMap.containsKey(partnerId)) {
+                partnerOrderPairHashMap.get(partnerId).add(orderId);
+                deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(deliveryPartnerHashMap.get(partnerId).getNumberOfOrders() + 1);
+                return;
+            }
+            List<String> ls = new ArrayList<>();
+            ls.add(orderId);
+            deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(1);
+            partnerOrderPairHashMap.put(partnerId, ls);
         }
-        List<String> ls = new ArrayList<>();
-        ls.add(orderId);
-        deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(1);
-        partnerOrderPairHashMap.put(partnerId,ls);
     }
 
     public Order getOrderById(String orderId) {
@@ -51,11 +52,15 @@ public class OrderRepository {
     }
 
     public DeliveryPartner getPartnerById(String partnerId) {
-        return deliveryPartnerHashMap.get(partnerId);
+        if(deliveryPartnerHashMap.containsKey(partnerId))
+            return deliveryPartnerHashMap.get(partnerId);
+        return null;
     }
 
     public Integer getOrderCountByPartnerId(String partnerId) {
-        return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
+        if(deliveryPartnerHashMap.containsKey(partnerId))
+            return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
+        return -1;
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
@@ -66,8 +71,7 @@ public class OrderRepository {
     }
 
     public List<String> getAllOrders() {
-        ArrayList<String> orders = new ArrayList<>(orderHashMap.keySet());
-        return orders;
+        return new ArrayList<>(orderHashMap.keySet());
     }
 
     public Integer getCountOfUnassignedOrders() {
