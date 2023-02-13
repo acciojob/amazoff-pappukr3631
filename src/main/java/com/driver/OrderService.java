@@ -20,23 +20,23 @@ public class OrderService {
         orderRepository.addPartner(partnerId);
     }
 
-    public void addOrderPartnerPair(String orderId, String partnerId) {
+    public void addOrderPartnerPair(String orderId, String partnerId) throws Exception {
         orderRepository.addOrderPartnerPair(orderId,partnerId);
     }
 
-    public Order getOrderById(String orderId) {
+    public Order getOrderById(String orderId) throws Exception {
         return orderRepository.getOrderById(orderId);
     }
 
-    public DeliveryPartner getPartnerById(String partnerId) {
+    public DeliveryPartner getPartnerById(String partnerId) throws Exception {
         return orderRepository.getPartnerById(partnerId);
     }
 
-    public Integer getOrderCountByPartnerId(String partnerId) {
+    public Integer getOrderCountByPartnerId(String partnerId) throws Exception {
         return orderRepository.getOrderCountByPartnerId(partnerId);
     }
 
-    public List<String> getOrdersByPartnerId(String partnerId) {
+    public List<String> getOrdersByPartnerId(String partnerId) throws Exception {
         return orderRepository.getOrdersByPartnerId(partnerId);
     }
 
@@ -48,19 +48,19 @@ public class OrderService {
         return orderRepository.getCountOfUnassignedOrders();
     }
 
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) throws Exception {
         return orderRepository.getOrdersLeftAfterGivenTimeByPartnerId(time,partnerId);
     }
 
-    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+    public String getLastDeliveryTimeByPartnerId(String partnerId) throws Exception {
         return orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
     }
 
-    public void deletePartnerById(String partnerId) {
+    public void deletePartnerById(String partnerId) throws Exception {
         orderRepository.deletePartnerById(partnerId);
     }
 
-    public void deleteOrderById(String orderId) {
+    public void deleteOrderById(String orderId) throws Exception {
         orderRepository.deleteOrderById(orderId);
     }
 }

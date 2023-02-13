@@ -9,20 +9,23 @@ import java.util.List;
 @Repository
 public class OrderRepository {
 
+    //<OrderId,Order>
     HashMap<String,Order> orderHashMap;
+    //<DeliveryPartnerId,DeliveryPartner>
     HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
+    //<DeliveryPartnerId,List<OrderId>>
     HashMap<String, List<String>> partnerOrderPairHashMap;
-    int assignedOrderCount;
+    //<OrderId,PartnerId>
+    HashMap<String,String> assignedOrdersHashMap;
 
     public OrderRepository() {
         orderHashMap = new HashMap<>();
         deliveryPartnerHashMap = new HashMap<>();
         partnerOrderPairHashMap = new HashMap<>();
-        assignedOrderCount = 0;
+        assignedOrdersHashMap = new HashMap<>();
     }
 
     public void addOrder(Order order) {
-
         orderHashMap.put(order.getId(),order);
     }
 
@@ -30,44 +33,48 @@ public class OrderRepository {
         deliveryPartnerHashMap.put(partnerId,new DeliveryPartner(partnerId));
     }
 
-    public void addOrderPartnerPair(String orderId, String partnerId) {
+    public void addOrderPartnerPair(String orderId, String partnerId) throws Exception {
         if(orderHashMap.containsKey(orderId) && deliveryPartnerHashMap.containsKey(partnerId)) {
-            assignedOrderCount++;
+            if(assignedOrdersHashMap.containsKey(orderId))
+            {
+                throw new Exception("Order Already Assigned To : " + assignedOrdersHashMap.get(orderId));
+            }
             if (partnerOrderPairHashMap.containsKey(partnerId)) {
                 partnerOrderPairHashMap.get(partnerId).add(orderId);
                 deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(deliveryPartnerHashMap.get(partnerId).getNumberOfOrders() + 1);
+                assignedOrdersHashMap.put(orderId,partnerId);
                 return;
             }
             List<String> ls = new ArrayList<>();
             ls.add(orderId);
             deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(1);
             partnerOrderPairHashMap.put(partnerId, ls);
+            assignedOrdersHashMap.put(orderId,partnerId);
         }
     }
 
-    public Order getOrderById(String orderId) {
+    public Order getOrderById(String orderId) throws Exception {
         if(orderHashMap.containsKey(orderId))
             return orderHashMap.get(orderId);
-        return null;
+        throw new Exception("Order Not Found");
     }
 
-    public DeliveryPartner getPartnerById(String partnerId) {
+    public DeliveryPartner getPartnerById(String partnerId) throws Exception {
         if(deliveryPartnerHashMap.containsKey(partnerId))
             return deliveryPartnerHashMap.get(partnerId);
-        return null;
+        throw new Exception("Delivery Partner Not Found");
     }
 
-    public Integer getOrderCountByPartnerId(String partnerId) {
+    public Integer getOrderCountByPartnerId(String partnerId) throws Exception {
         if(deliveryPartnerHashMap.containsKey(partnerId))
             return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
-        return -1;
+        throw new Exception("Delivery Partner Not Found");
     }
 
-    public List<String> getOrdersByPartnerId(String partnerId) {
-        List<String> list = new ArrayList<>();
+    public List<String> getOrdersByPartnerId(String partnerId) throws Exception {
         if(partnerOrderPairHashMap.containsKey(partnerId))
-            list = partnerOrderPairHashMap.get(partnerId);
-        return list;
+            return partnerOrderPairHashMap.get(partnerId);
+        throw new Exception("Delivery Partner Not Found");
     }
 
     public List<String> getAllOrders() {
@@ -82,10 +89,10 @@ public class OrderRepository {
 //            pairedCount += partnerOrderPairHashMap.get(partner).size();
 //        }
 //        return orderHashMap.size() - pairedCount;
-        return orderHashMap.size() - assignedOrderCount;
+        return orderHashMap.size() - assignedOrdersHashMap.size();
     }
 
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) throws Exception {
         int t = Integer.parseInt(time.substring(0,2))*60 + Integer.parseInt(time.substring(3,5));
         int ordersLeft = 0;
         if(partnerOrderPairHashMap.containsKey(partnerId))
@@ -102,10 +109,10 @@ public class OrderRepository {
             }
             return ordersLeft;
         }
-        return 0;
+        throw new Exception("Delivery Partner Not Found");
     }
 
-    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+    public String getLastDeliveryTimeByPartnerId(String partnerId) throws Exception {
 
         if(partnerOrderPairHashMap.containsKey(partnerId))
         {
@@ -125,26 +132,36 @@ public class OrderRepository {
                 mm = "0" + mm;
             return hh + ":" + mm;
         }
-        return "Partner Not Found";
+        throw new Exception("Delivery Partner Not Found");
     }
 
-    public void deletePartnerById(String partnerId) {
-        deliveryPartnerHashMap.remove(partnerId);
-        assignedOrderCount -= partnerOrderPairHashMap.get(partnerId).size();
-        partnerOrderPairHashMap.remove(partnerId);
+    public void deletePartnerById(String partnerId) throws Exception {
+        if(deliveryPartnerHashMap.containsKey(partnerId)) {
+            deliveryPartnerHashMap.remove(partnerId);
+            for (String orderId : assignedOrdersHashMap.keySet()) {
+                if (assignedOrdersHashMap.get(orderId).equals(partnerId)) {
+                    assignedOrdersHashMap.remove(orderId);
+                }
+            }
+            partnerOrderPairHashMap.remove(partnerId);
+        }
+        throw new Exception("Delivery Partner Not Found");
     }
 
-    public void deleteOrderById(String orderId) {
-        orderHashMap.remove(orderId);
-        for(String partner : partnerOrderPairHashMap.keySet())
-        {
-            List<String> orders = partnerOrderPairHashMap.get(partner);
-            if(orders.contains(orderId))
-            {
-                orders.remove(orderId);
-                assignedOrderCount--;
-                break;
+    public void deleteOrderById(String orderId) throws Exception {
+        if(orderHashMap.containsKey(orderId)) {
+            orderHashMap.remove(orderId);
+            if(assignedOrdersHashMap.containsKey(orderId)) {
+                assignedOrdersHashMap.remove(orderId);
+                for (String partner : partnerOrderPairHashMap.keySet()) {
+                    List<String> orders = partnerOrderPairHashMap.get(partner);
+                    if (orders.contains(orderId)) {
+                        orders.remove(orderId);
+                        break;
+                    }
+                }
             }
         }
+        throw new Exception("Order Not Found");
     }
 }
