@@ -24,61 +24,39 @@ public class OrderController {
     }
 
     @PutMapping("/add-order-partner-pair")
-    public ResponseEntity<String> addOrderPartnerPair(@RequestParam String orderId, @RequestParam String partnerId) throws Exception {
+    public ResponseEntity<String> addOrderPartnerPair(@RequestParam String orderId, @RequestParam String partnerId) {
         //This is basically assigning that order to that partnerId
-        try {
-            orderService.addOrderPartnerPair(orderId, partnerId);
-            return new ResponseEntity<>("New order-partner pair added successfully", HttpStatus.CREATED);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>("New order-partner pair added successfully", HttpStatus.EXPECTATION_FAILED);
-        }
+        orderService.addOrderPartnerPair(orderId, partnerId);
+        return new ResponseEntity<>("New order-partner pair added successfully", HttpStatus.CREATED);
+
     }
 
     @GetMapping("/get-order-by-id/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable String orderId) throws Exception {
-        try {
-            Order order = orderService.getOrderById(orderId);
-            //order should be returned with an orderId.
-            return new ResponseEntity<>(order, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<Order> getOrderById(@PathVariable String orderId) {
+        Order order = orderService.getOrderById(orderId);
+        //order should be returned with an orderId.
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-partner-by-id/{partnerId}")
-    public ResponseEntity<DeliveryPartner> getPartnerById(@PathVariable String partnerId) throws Exception {
-        try {
-            DeliveryPartner deliveryPartner = orderService.getPartnerById(partnerId);
-            //deliveryPartner should contain the value given by partnerId
-            return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<DeliveryPartner> getPartnerById(@PathVariable String partnerId) {
+        DeliveryPartner deliveryPartner = orderService.getPartnerById(partnerId);
+        //deliveryPartner should contain the value given by partnerId
+        return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-order-count-by-partner-id/{partnerId}")
-    public ResponseEntity<Integer> getOrderCountByPartnerId(@PathVariable String partnerId) throws Exception {
-
-        try {
-            Integer orderCount = orderService.getOrderCountByPartnerId(partnerId);
-            //orderCount should denote the orders given by a partner-id
-            return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<Integer> getOrderCountByPartnerId(@PathVariable String partnerId) {
+        Integer orderCount = orderService.getOrderCountByPartnerId(partnerId);
+        //orderCount should denote the orders given by a partner-id
+        return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-orders-by-partner-id/{partnerId}")
-    public ResponseEntity<List<String>> getOrdersByPartnerId(@PathVariable String partnerId) throws Exception {
-        try {
-            List<String> orders = orderService.getOrdersByPartnerId(partnerId);
-            //orders should contain a list of orders by PartnerId
-            return new ResponseEntity<>(orders, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<List<String>> getOrdersByPartnerId(@PathVariable String partnerId) {
+        List<String> orders = orderService.getOrdersByPartnerId(partnerId);
+        //orders should contain a list of orders by PartnerId
+        return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-orders")
@@ -96,51 +74,32 @@ public class OrderController {
     }
 
     @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")
-    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId) throws Exception {
-
-        try {
-            Integer countOfOrders = orderService.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
-            //countOfOrders that are left after a particular time of a DeliveryPartner
-            return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId) {
+        Integer countOfOrders = orderService.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
+        //countOfOrders that are left after a particular time of a DeliveryPartner
+        return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-last-delivery-time/{partnerId}")
-    public ResponseEntity<String> getLastDeliveryTimeByPartnerId(@PathVariable String partnerId) throws Exception {
-        try {
-            String time = orderService.getLastDeliveryTimeByPartnerId(partnerId);
-            //Return the time when that partnerId will deliver his last delivery order.
-            return new ResponseEntity<>(time, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+    public ResponseEntity<String> getLastDeliveryTimeByPartnerId(@PathVariable String partnerId) {
+        String time = orderService.getLastDeliveryTimeByPartnerId(partnerId);
+        //Return the time when that partnerId will deliver his last delivery order.
+        return new ResponseEntity<>(time, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete-partner-by-id/{partnerId}")
-    public ResponseEntity<String> deletePartnerById(@PathVariable String partnerId) throws Exception {
-
+    public ResponseEntity<String> deletePartnerById(@PathVariable String partnerId) {
         //Delete the partnerId
         //And push all his assigned orders to unassigned orders.
-        try {
-            orderService.deletePartnerById(partnerId);
-            return new ResponseEntity<>(partnerId + " removed successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+        orderService.deletePartnerById(partnerId);
+        return new ResponseEntity<>(partnerId + " removed successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete-order-by-id/{orderId}")
     public ResponseEntity<String> deleteOrderById(@PathVariable String orderId) throws Exception {
-
         //Delete an order and also
         // remove it from the assigned order of that partnerId
-        try {
-            orderService.deleteOrderById(orderId);
-            return new ResponseEntity<>(orderId + " removed successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+        orderService.deleteOrderById(orderId);
+        return new ResponseEntity<>(orderId + " removed successfully", HttpStatus.CREATED);
     }
 }

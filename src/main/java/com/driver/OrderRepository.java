@@ -33,11 +33,11 @@ public class OrderRepository {
         deliveryPartnerHashMap.put(partnerId,new DeliveryPartner(partnerId));
     }
 
-    public void addOrderPartnerPair(String orderId, String partnerId) throws Exception {
+    public void addOrderPartnerPair(String orderId, String partnerId) {
         if(orderHashMap.containsKey(orderId) && deliveryPartnerHashMap.containsKey(partnerId)) {
             if(assignedOrdersHashMap.containsKey(orderId))
             {
-                throw new Exception("Order Already Assigned To : " + assignedOrdersHashMap.get(orderId));
+                return;
             }
             if (partnerOrderPairHashMap.containsKey(partnerId)) {
                 partnerOrderPairHashMap.get(partnerId).add(orderId);
@@ -53,28 +53,28 @@ public class OrderRepository {
         }
     }
 
-    public Order getOrderById(String orderId) throws Exception {
+    public Order getOrderById(String orderId) {
         if(orderHashMap.containsKey(orderId))
             return orderHashMap.get(orderId);
-        throw new Exception("Order Not Found");
+        return new Order("-1","0");
     }
 
-    public DeliveryPartner getPartnerById(String partnerId) throws Exception {
+    public DeliveryPartner getPartnerById(String partnerId) {
         if(deliveryPartnerHashMap.containsKey(partnerId))
             return deliveryPartnerHashMap.get(partnerId);
-        throw new Exception("Delivery Partner Not Found");
+        return new DeliveryPartner("-1");
     }
 
-    public Integer getOrderCountByPartnerId(String partnerId) throws Exception {
+    public Integer getOrderCountByPartnerId(String partnerId) {
         if(deliveryPartnerHashMap.containsKey(partnerId))
             return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
-        throw new Exception("Delivery Partner Not Found");
+        return -1;
     }
 
-    public List<String> getOrdersByPartnerId(String partnerId) throws Exception {
+    public List<String> getOrdersByPartnerId(String partnerId) {
         if(partnerOrderPairHashMap.containsKey(partnerId))
             return partnerOrderPairHashMap.get(partnerId);
-        throw new Exception("Delivery Partner Not Found");
+        return new ArrayList<String>();
     }
 
     public List<String> getAllOrders() {
@@ -92,7 +92,7 @@ public class OrderRepository {
         return orderHashMap.size() - assignedOrdersHashMap.size();
     }
 
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) throws Exception {
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
         int t = Integer.parseInt(time.substring(0,2))*60 + Integer.parseInt(time.substring(3,5));
         int ordersLeft = 0;
         if(partnerOrderPairHashMap.containsKey(partnerId))
@@ -109,10 +109,10 @@ public class OrderRepository {
             }
             return ordersLeft;
         }
-        throw new Exception("Delivery Partner Not Found");
+        return -1;
     }
 
-    public String getLastDeliveryTimeByPartnerId(String partnerId) throws Exception {
+    public String getLastDeliveryTimeByPartnerId(String partnerId) {
 
         if(partnerOrderPairHashMap.containsKey(partnerId))
         {
@@ -132,10 +132,10 @@ public class OrderRepository {
                 mm = "0" + mm;
             return hh + ":" + mm;
         }
-        throw new Exception("Delivery Partner Not Found");
+        return "0";
     }
 
-    public void deletePartnerById(String partnerId) throws Exception {
+    public void deletePartnerById(String partnerId) {
         if(deliveryPartnerHashMap.containsKey(partnerId)) {
             deliveryPartnerHashMap.remove(partnerId);
             for (String orderId : assignedOrdersHashMap.keySet()) {
@@ -145,10 +145,9 @@ public class OrderRepository {
             }
             partnerOrderPairHashMap.remove(partnerId);
         }
-        throw new Exception("Delivery Partner Not Found");
     }
 
-    public void deleteOrderById(String orderId) throws Exception {
+    public void deleteOrderById(String orderId) {
         if(orderHashMap.containsKey(orderId)) {
             orderHashMap.remove(orderId);
             if(assignedOrdersHashMap.containsKey(orderId)) {
@@ -162,6 +161,5 @@ public class OrderRepository {
                 }
             }
         }
-        throw new Exception("Order Not Found");
     }
 }
