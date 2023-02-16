@@ -96,7 +96,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/delete-order-by-id/{orderId}")
-    public ResponseEntity<String> deleteOrderById(@PathVariable String orderId) throws Exception {
+    public ResponseEntity<String> deleteOrderById(@PathVariable String orderId) {
         //Delete an order and also
         // remove it from the assigned order of that partnerId
         orderService.deleteOrderById(orderId);
