@@ -10,13 +10,13 @@ import java.util.List;
 public class OrderRepository {
 
     //<OrderId,Order>
-    HashMap<String,Order> orderHashMap;
+    private HashMap<String,Order> orderHashMap;
     //<DeliveryPartnerId,DeliveryPartner>
-    HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
+    private HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
     //<DeliveryPartnerId,List<OrderId>>
-    HashMap<String, List<String>> partnerOrderPairHashMap;
+    private HashMap<String, List<String>> partnerOrderPairHashMap;
     //<OrderId,PartnerId>
-    HashMap<String,String> assignedOrdersHashMap;
+    private HashMap<String,String> assignedOrdersHashMap;
 
     public OrderRepository() {
         orderHashMap = new HashMap<>();
