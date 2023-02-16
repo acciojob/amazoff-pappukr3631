@@ -131,10 +131,15 @@ public class OrderRepository {
     public void deletePartnerById(String partnerId) {
         if(deliveryPartnerHashMap.containsKey(partnerId)) {
             deliveryPartnerHashMap.remove(partnerId);
-            for (String orderId : assignedOrdersHashMap.keySet()) {
-                if (assignedOrdersHashMap.get(orderId).equals(partnerId)) {
-                    assignedOrdersHashMap.remove(orderId);
+            try {
+                for (String orderId : assignedOrdersHashMap.keySet()) {
+                    if (assignedOrdersHashMap.get(orderId).equals(partnerId)) {
+                        assignedOrdersHashMap.remove(orderId);
+                    }
                 }
+            }catch (Exception e){
+                partnerOrderPairHashMap.remove(partnerId);
+                return;
             }
             partnerOrderPairHashMap.remove(partnerId);
         }
