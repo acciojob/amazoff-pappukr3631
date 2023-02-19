@@ -68,7 +68,8 @@ public class OrderRepository {
     public Integer getOrderCountByPartnerId(String partnerId) {
         if(deliveryPartnerHashMap.containsKey(partnerId))
             return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
-        return 0;
+        else
+            return 0;
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
