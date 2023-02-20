@@ -151,7 +151,10 @@ public class OrderRepository {
 
         for(String partner : partnerOrderPairHashMap.keySet()) {
             HashSet<String> orders = partnerOrderPairHashMap.get(partner);
-            orders.remove(orderId);
+            if(orders.contains(orderId)) {
+                orders.remove(orderId);
+                deliveryPartnerHashMap.get(partner).setNumberOfOrders(deliveryPartnerHashMap.get(partner).getNumberOfOrders()-1);
+            }
         }
 
        /* if(partnerOrderPairHashMap.containsKey(orderId)){
